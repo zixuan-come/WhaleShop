@@ -1,0 +1,18 @@
+# 编译产物
+whaleshop
+whaleshop.exe
+*.exe
+/out/
+/bin/
+
+# 依赖缓存
+/vendor/
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

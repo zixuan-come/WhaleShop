@@ -1,0 +1,12 @@
+services:
+  whaleshop:
+    build: .
+    container_name: whaleshop
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
