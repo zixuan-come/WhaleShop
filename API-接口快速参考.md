@@ -50,11 +50,13 @@ X-Project-Id: 1
 Content-Type: application/json
 ```
 
-成功或失败响应均为 JSON。错误统一格式：
+业务处理函数在 HTTP 允许响应体时返回 JSON，常见业务错误格式为：
 
 ```json
 {"error":"错误说明"}
 ```
+
+`204`、`304` 不携带响应体，不能对它们执行 JSON 响应体断言。未匹配路由或方法产生的 `404`、`405` 可能由 Go 路由器返回纯文本，不属于上述业务错误格式。
 
 ### 2.3 常用状态码
 
@@ -256,13 +258,15 @@ curl -i "$BASE_URL/orders/error?code=418"
 curl -i "$BASE_URL/orders/error?code=503"
 ```
 
-响应体固定为：
+当指定 `200~599` 中允许响应体的状态码时，响应体为：
 
 ```json
 {"error":"触发指定错误码"}
 ```
 
 HTTP 状态码分别为 `418`、`503`。
+
+边界：虽然参数解析接受 `100~199`，这些属于信息性响应，不能保证客户端最终收到的状态码等于指定值；`101` 涉及协议切换，本接口没有实现协议升级。指定 `204`、`304` 时不会返回上述 JSON 响应体。用于错误断言和重试测试时，建议选择 `4xx` 或 `5xx`，例如上述 `418`、`503`。HTTP 响应写入规则见 [Go net/http 官方说明](https://pkg.go.dev/net/http#ResponseWriter)。
 
 ## 6. 推荐验证顺序
 
@@ -291,4 +295,3 @@ WhaleTestPro 中配置环境时，云部署地址使用 `http://1.12.53.100:8081
 
 - [完整接口文档](API.md)
 - [WhaleShop GitHub 仓库](https://github.com/zixuan-come/WhaleShop)
-
