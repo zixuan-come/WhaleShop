@@ -197,6 +197,23 @@ PUT /orders/{id}
 Content-Type: application/json
 ```
 
+路径参数：`id` 为要更新的订单 ID。例如更新订单 `2`，请求路径填写 `/orders/2`；在 WhaleTestPro 中，也可以保留 `/orders/{id}`，在「Path 参数」中填写 `id = 2`。
+
+请求体（Body 选择 JSON，不能留为 none）：
+
+```json
+{
+  "item": "AirPods Pro 2",
+  "quantity": 3,
+  "price": 1899,
+  "status": "shipped"
+}
+```
+
+`id` 指定更新哪条订单，JSON 请求体指定更新后的内容；仅填写 `id`、不发送请求体会返回 `400`。
+
+调用示例：
+
 ```bash
 curl -i -X PUT "$BASE_URL/orders/2" \
   -H "Content-Type: application/json" \
@@ -207,7 +224,7 @@ curl -i -X PUT "$BASE_URL/orders/2" \
 这是全量替换语义：`id` 和 `created_at` 保留，未传的其他字段会变为零值。当前服务未实现 PATCH。
 
 - `200`：更新成功。
-- `400`：`id` 不是整数或 JSON 非法。
+- `400`：`id` 不是整数、请求体为空或不是合法 JSON。
 - `404`：订单不存在。
 - `409`：原订单状态为 `cancelled`，返回 `{"error":"已取消的订单不能修改"}`。
 
